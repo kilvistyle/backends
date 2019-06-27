@@ -26,7 +26,7 @@ public class UserController {
 
     @GetMapping("{userId}")
     public Mono<User> getById(@NotNull @PathVariable final String userId) {
-        if ("unsubscribedUser".equals(userId)) {
+        if ("unsubscribed-user".equals(userId)) {
             return Mono.just(genUser(userId, User.UserState.UNSUBSCRIBE))
                     .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
                     .log(String.format("users/%s(invalid)", userId));
