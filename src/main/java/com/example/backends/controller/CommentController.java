@@ -28,20 +28,20 @@ import java.util.List;
 @RequestMapping("comments")
 public class CommentController {
 
-    @GetMapping("{articleId}")
-    public Mono<List<Comment>> findByArticleId(@NotNull @PathVariable Long articleId) {
+    @GetMapping("{entryId}")
+    public Mono<List<Comment>> findByEntryId(@NotNull @PathVariable Long entryId) {
         return Flux.range(1, 10)
                 .map(integer -> Comment.builder()
-                        .articleId(articleId)
+                        .entryId(entryId)
                         .number(Long.valueOf(integer))
-                        .body(String.format("the comment number of %d at article_%d", integer, articleId))
+                        .body(String.format("the comment number of %d at entry_%d", integer, entryId))
                         .userId("test userId")
                         .postedDate(new Date())
                         .build())
                 .sort(comparing(Comment::getNumber, naturalOrder()))
                 .collectList()
                 .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
-                .log(String.format("comments/%d", articleId));
+                .log(String.format("comments/%d", entryId));
     }
 
 }

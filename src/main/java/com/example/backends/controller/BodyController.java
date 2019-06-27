@@ -24,14 +24,14 @@ import java.time.Duration;
 @RequestMapping("bodies")
 public class BodyController {
 
-    @GetMapping("{articleId}")
-    public Mono<Body> getByArticleId(@NotNull @PathVariable Long articleId) {
+    @GetMapping("{entryId}")
+    public Mono<Body> getByEntryId(@NotNull @PathVariable Long entryId) {
         return Mono.just(Body.builder()
-                .articleId(articleId)
-                .body(String.format("the body of article_%d", articleId))
+                .entryId(entryId)
+                .body(String.format("the body of entry_%d", entryId))
                 .build())
                 .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
-                .log(String.format("bodies/%d", articleId));
+                .log(String.format("bodies/%d", entryId));
     }
 
 }

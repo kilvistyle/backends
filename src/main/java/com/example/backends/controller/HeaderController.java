@@ -31,7 +31,7 @@ public class HeaderController {
     public Mono<List<Header>> findByCategoryId(@RequestParam(required = false) final String categoryId) {
         return Flux.range(1, 10)
                 .map(integer -> Header.builder()
-                        .articleId(Long.valueOf(integer))
+                        .entryId(Long.valueOf(integer))
                         .subject(String.format("the subject of %d", integer))
                         .userId("test userId")
                         .categoryId(StringUtils.isEmpty(categoryId) ? "test category" : categoryId)
@@ -41,17 +41,17 @@ public class HeaderController {
                         .version(Long.valueOf(1))
                         .build()
                 )
-                .sort(comparing(Header::getArticleId, naturalOrder()))
+                .sort(comparing(Header::getEntryId, naturalOrder()))
                 .collectList()
                 .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
                 .log(String.format("headers/findByCategory/%s", categoryId));
     }
 
-    @GetMapping("{articleId}")
-    public Mono<Header> getById(@NotNull @PathVariable final Long articleId) {
+    @GetMapping("{entryId}")
+    public Mono<Header> getById(@NotNull @PathVariable final Long entryId) {
         return Mono.just(Header.builder()
-                .articleId(articleId)
-                .subject(String.format("the subject of %d", articleId))
+                .entryId(entryId)
+                .subject(String.format("the subject of %d", entryId))
                 .userId("test userId")
                 .categoryId("test category")
                 .isDraft(false)
@@ -60,7 +60,7 @@ public class HeaderController {
                 .version(Long.valueOf(1))
                 .build())
                 .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
-                .log(String.format("headers/%d", articleId));
+                .log(String.format("headers/%d", entryId));
     }
 
 }

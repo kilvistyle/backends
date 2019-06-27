@@ -19,7 +19,7 @@ import java.io.Serializable;
 @Builder
 public class Body implements Serializable {
 
-    private Long articleId;
+    private Long entryId;
     private String body;
 
 }
