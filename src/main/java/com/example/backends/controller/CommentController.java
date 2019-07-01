@@ -6,13 +6,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 import static java.util.Comparator.*;
 
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Date;
-import java.util.List;
 
 /**
  * <p>CommentController</p>
@@ -29,7 +27,7 @@ import java.util.List;
 public class CommentController {
 
     @GetMapping("{entryId}")
-    public Mono<List<Comment>> findByEntryId(@NotNull @PathVariable Long entryId) {
+    public Flux<Comment> findByEntryId(@NotNull @PathVariable Long entryId) {
         return Flux.range(1, 10)
                 .map(integer -> Comment.builder()
                         .entryId(entryId)
@@ -39,8 +37,7 @@ public class CommentController {
                         .postedDate(new Date())
                         .build())
                 .sort(comparing(Comment::getNumber, naturalOrder()))
-                .collectList()
-                .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
+                .delaySequence(Duration.ofMillis(1500)) // delay 1.5sec
                 .log(String.format("comments/%d", entryId));
     }
 

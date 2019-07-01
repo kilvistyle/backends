@@ -9,7 +9,6 @@ import reactor.core.publisher.Mono;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Date;
-import java.util.List;
 
 import static java.util.Comparator.*;
 
@@ -28,7 +27,7 @@ import static java.util.Comparator.*;
 public class HeaderController {
 
     @GetMapping("find")
-    public Mono<List<Header>> findByCategoryId(@RequestParam(required = false) final String categoryId) {
+    public Flux<Header> findByCategoryId(@RequestParam(required = false) final String categoryId) {
         return Flux.range(1, 10)
                 .map(integer -> Header.builder()
                         .entryId(Long.valueOf(integer))
@@ -42,8 +41,7 @@ public class HeaderController {
                         .build()
                 )
                 .sort(comparing(Header::getEntryId, naturalOrder()))
-                .collectList()
-                .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
+                .delaySequence(Duration.ofMillis(1500)) // delay 1.5sec
                 .log(String.format("headers/findByCategory/%s", categoryId));
     }
 

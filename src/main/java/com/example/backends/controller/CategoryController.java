@@ -10,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
-import java.util.List;
 
 /**
  * <p>CategoryController</p>
@@ -27,10 +26,9 @@ import java.util.List;
 public class CategoryController {
 
     @GetMapping
-    public Mono<List<Category>> findAll() {
+    public Flux<Category> findAll() {
         return Flux.range(1, 10)
                 .flatMap(integer -> this.getById("category_"+integer))
-                .collectList()
                 .log("categories");
     }
     @GetMapping("{categoryId}")
