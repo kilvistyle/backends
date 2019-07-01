@@ -31,7 +31,6 @@ public class CategoryController {
         return Flux.range(1, 10)
                 .flatMap(integer -> this.getById("category_"+integer))
                 .collectList()
-                .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
                 .log("categories");
     }
     @GetMapping("{categoryId}")
