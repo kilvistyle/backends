@@ -1,6 +1,7 @@
 package com.example.backends.controller;
 
 import com.example.backends.entity.Comment;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,19 +13,13 @@ import javax.validation.constraints.NotNull;
 import java.time.Duration;
 import java.util.Date;
 
-/**
- * <p>CommentController</p>
- * <p>TODO クラスコメント</p>
- * <p>
- * ・新規作成 2019/06/26 S.Chiba.<br>
- * </p>
- *
- * @author S.Chiba
- * @since 2019/06/26
- */
+// mock api controller
 @RestController
 @RequestMapping("comments")
 public class CommentController {
+
+    @Value("${mock.api.delayofmillis}")
+    private long delayOfMillis;
 
     @GetMapping("{entryId}")
     public Flux<Comment> findByEntryId(@NotNull @PathVariable Long entryId) {
@@ -37,7 +32,7 @@ public class CommentController {
                         .postedDate(new Date())
                         .build())
                 .sort(comparing(Comment::getNumber, naturalOrder()))
-                .delaySequence(Duration.ofMillis(1500)) // delay 1.5sec
+                .delaySequence(Duration.ofMillis(delayOfMillis))
                 .log(String.format("comments/%d", entryId));
     }
 

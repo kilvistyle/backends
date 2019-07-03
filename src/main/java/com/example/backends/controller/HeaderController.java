@@ -1,6 +1,7 @@
 package com.example.backends.controller;
 
 import com.example.backends.entity.Header;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
@@ -12,19 +13,13 @@ import java.util.Date;
 
 import static java.util.Comparator.*;
 
-/**
- * <p>HeaderController</p>
- * <p>TODO クラスコメント</p>
- * <p>
- * ・新規作成 2019/06/26 S.Chiba.<br>
- * </p>
- *
- * @author S.Chiba
- * @since 2019/06/26
- */
+// mock api controller
 @RestController
 @RequestMapping("headers")
 public class HeaderController {
+
+    @Value("${mock.api.delayofmillis}")
+    private long delayOfMillis;
 
     @GetMapping("find")
     public Flux<Header> findByCategoryId(@RequestParam(required = false) final String categoryId) {
@@ -41,7 +36,7 @@ public class HeaderController {
                         .build()
                 )
                 .sort(comparing(Header::getEntryId, naturalOrder()))
-                .delaySequence(Duration.ofMillis(1500)) // delay 1.5sec
+                .delaySequence(Duration.ofMillis(delayOfMillis))
                 .log(String.format("headers/findByCategory/%s", categoryId));
     }
 
@@ -57,7 +52,7 @@ public class HeaderController {
                 .updateDate(new Date())
                 .version(Long.valueOf(1))
                 .build())
-                .delayElement(Duration.ofMillis(1500)) // delay 1.5sec
+                .delayElement(Duration.ofMillis(delayOfMillis))
                 .log(String.format("headers/%d", entryId));
     }
 
